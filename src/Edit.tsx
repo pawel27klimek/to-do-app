@@ -1,10 +1,12 @@
 import React from 'react';
+import { observableTodoStore } from './TodoStore';
+import { todo } from './types';
 
-const AddEdit = () => {
+const Edit = ({ store }: { store: typeof observableTodoStore }) => {
   return (
     <div>
       <form>
-        <h3>Add a new book</h3>
+        <h3>Edit</h3>
         <label>
           Title:
           <input
@@ -32,10 +34,10 @@ const AddEdit = () => {
             //   onChange={(event) => {
           />
         </label>
-        <button type="submit">Add new to do</button>
+        <button type="submit">Confirm</button>
       </form>
     </div>
   );
 };
 
-export default AddEdit;
+export default Edit;

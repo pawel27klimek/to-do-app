@@ -1,20 +1,26 @@
 import React from 'react';
+import { todo } from './types';
+import { ObservableTodoStore } from './TodoStore';
+import { useParams } from 'react-router-dom';
 
-const Details = () => {
+const Details = ({ store }: { store: ObservableTodoStore }) => {
+  const params = useParams();
+  const id = parseInt(params.id!);
+  const selectedTodo = store.todos[id];
   return (
     <div>
       <h1>Details</h1>
       <div>
-        Title:<span>Lorem, ipsum.</span>
+        Title:<span>{selectedTodo.title}</span>
       </div>
       <div>
-        Description:<span>Lorem ipsum dolor sit amet consectetur.</span>
+        Description:<span>{selectedTodo.description}</span>
       </div>
       <div>
-        CreatedAt:<span>Lorem, ipsum.</span>
+        CreatedAt:<span>{selectedTodo.createdAt.toString()}</span>
       </div>
       <div>
-        Deadline:<span>Lorem, ipsum.</span>
+        Deadline:<span>{selectedTodo.deadline}</span>
       </div>
     </div>
   );

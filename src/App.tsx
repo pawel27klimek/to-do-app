@@ -1,16 +1,20 @@
 import { Routes, Route, Link, Outlet } from 'react-router-dom';
 import Details from './Details';
-import AddEdit from './AddEdit';
+import Add from './Add';
+import Edit from './Edit';
 import List from './List';
-import Layout from './Layout';
+import { observableTodoStore } from './TodoStore';
 
 function App() {
   // const x = Symbol();
   return (
     <Routes>
-      <Route path="/" element={<Layout />}>
-        <Route path="addedit" element={<AddEdit />} />
-        <Route path="details" element={<Details />} />
+      <Route path="/" element={<List store={observableTodoStore} />}>
+        <Route path="add" element={<Add store={observableTodoStore} />} />
+        <Route path=":id">
+          <Route index element={<Details store={observableTodoStore} />} />
+          <Route path="edit" element={<Edit store={observableTodoStore} />} />
+        </Route>
       </Route>
     </Routes>
   );
