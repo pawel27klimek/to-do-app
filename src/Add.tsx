@@ -2,8 +2,11 @@ import React, { useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { todo } from './types';
 import { ObservableTodoStore } from './TodoStore';
+import { useNavigate } from 'react-router-dom';
 
 const Add = observer(({ store }: { store: ObservableTodoStore }) => {
+  const navigate = useNavigate();
+
   const defaultDeadline = () => {
     const date = new Date();
     const dateInAWeek = new Date(date.setDate(date.getDate() + 7));
@@ -31,6 +34,8 @@ const Add = observer(({ store }: { store: ObservableTodoStore }) => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     store.addTodo(newTodo);
+    navigate(`/${store.selectedTodoId}`);
+    setTimeout(() => {}, 2000);
     setNewTodo({
       id: Date.now(),
       title: '',
@@ -39,7 +44,7 @@ const Add = observer(({ store }: { store: ObservableTodoStore }) => {
       deadline: defaultDeadline(),
     });
   };
-  console.log(newTodo.deadline);
+
   return (
     <div>
       <form onSubmit={(event) => handleSubmit(event)}>
@@ -53,8 +58,10 @@ const Add = observer(({ store }: { store: ObservableTodoStore }) => {
             onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
               handleChange(event);
             }}
+            autoComplete="off"
           />
         </label>
+
         <label>
           Description:
           <input
@@ -64,6 +71,7 @@ const Add = observer(({ store }: { store: ObservableTodoStore }) => {
             onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
               handleChange(event);
             }}
+            autoComplete="off"
           />
         </label>
         <label>
@@ -71,7 +79,7 @@ const Add = observer(({ store }: { store: ObservableTodoStore }) => {
           <input
             type="date"
             name="deadline"
-            value={newTodo.deadline.toString()}
+            value={newTodo.deadline}
             onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
               handleChange(event);
             }}

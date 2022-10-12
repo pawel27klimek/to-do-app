@@ -8,24 +8,28 @@ const Todo = observer(
   ({ todo, store }: { todo: todo; store: ObservableTodoStore }) => {
     const navigate = useNavigate();
 
+    const handleSelect = () => {
+      store.setSelectedtodoId(todo.id);
+      navigate(`/${todo.id}`);
+    };
+
     const handleDelete = (event: React.MouseEvent<SVGElement, MouseEvent>) => {
       event.stopPropagation();
       store.deleteTodo(todo.id);
     };
 
+    const handleEdit = (event: React.MouseEvent<SVGElement, MouseEvent>) => {
+      event.stopPropagation();
+      store.setSelectedtodoId(todo.id);
+      console.log(store.selectedTodoId);
+      navigate(`/${todo.id}/edit`);
+    };
+
     return (
-      <div
-        style={{ border: 'solid black' }}
-        onClick={() => navigate(`/${todo.id}`)}
-      >
-        {/* <FiEdit3
-        onClick={(event: React.MouseEvent<SVGElement, MouseEvent>) => {
-          event.stopPropagation();
-          navigate(`/${todo.id}/edit`);
-        }}
-      /> */}
-        <FiTrash2 onClick={(event) => handleDelete(event)} />
+      <div style={{ border: 'solid black' }} onClick={handleSelect}>
         title:{todo.title}
+        <FiEdit3 onClick={(event) => handleEdit(event)} />
+        <FiTrash2 onClick={(event) => handleDelete(event)} />
       </div>
     );
   }
