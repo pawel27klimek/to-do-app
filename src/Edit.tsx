@@ -8,34 +8,32 @@ const Edit = observer(({ store }: { store: ObservableTodoStore }) => {
   // const params = useParams();
   // const id: number = parseInt(params.id!);
   // ???????????
-  let selectedTodo = {
-    id: 0,
-    title: '',
-    description: '',
-    createdAt: new Date(),
-    deadline: '',
-  };
 
   // if (store.todos.length > 0) {
   //   selectedTodo = store.todos.find(
   //     (todo) => todo.id === store.selectedTodoId
   //   )!;
   // }
-
   const navigate = useNavigate();
   const [editTodo, setEditTodo] = useState<todo>({
-    id: selectedTodo.id,
-    title: selectedTodo.title,
-    description: selectedTodo.description,
-    createdAt: selectedTodo.createdAt,
-    deadline: selectedTodo.deadline,
+    id: 0,
+    title: '',
+    description: '',
+    createdAt: new Date(),
+    deadline: '',
   });
-
   useEffect(() => {
-    const selectedTodo = store.todos.find(
-      (todo) => todo.id === store.selectedTodoId
-    );
+    if (store.selectedTodo !== undefined) {
+      const selected = store.selectedTodo;
+      setEditTodo(selected);
+    }
   }, [store.selectedTodoId]);
+
+  // useEffect(() => {
+  //   const selectedTodo = store.todos.find(
+  //     (todo) => todo.id === store.selectedTodoId
+  //   );
+  // }, [store.selectedTodoId]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEditTodo((prev) => ({

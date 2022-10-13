@@ -5,50 +5,65 @@ import { useParams } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 
+type todoDetails = {
+  id: number;
+  title: string;
+  description: string;
+  createdAt: Date;
+  deadline: string;
+};
+
 const Details = observer(({ store }: { store: ObservableTodoStore }) => {
   // const params = useParams();
   // const id: number = parseInt(params.id!);
   //?????????????
-  let selectedTodo = {
-    id: 0,
-    title: '',
-    description: '',
-    createdAt: new Date(),
-    deadline: '',
-  };
-  if (store.todos.length > 0) {
-    selectedTodo = store.todos.find(
-      (todo) => todo.id === store.selectedTodoId
-    )!;
-  }
+
+  const [showDetails, setShowDetails] = useState(false);
+  const [detailsTodo, setDetailsTodo] = useState<todoDetails>();
+
+  useEffect(() => {
+    if (store.selectedTodo !== undefined) {
+      const selected = store.selectedTodo;
+      setDetailsTodo(selected);
+      setShowDetails(true);
+    } else {
+      setShowDetails(false);
+    }
+  }, [store.selectedTodoId]);
+
+  // if (store.todos.length > 0) {
+  //   selectedTodo = store.todos.find(
+  //     (todo) => todo.id === store.selectedTodoId
+  //   )!;
+  // }
 
   return (
     <div>
       <h1>Details</h1>
 
-      {store.isLoading ? (
-        <div></div>
+      {!showDetails ? (
+        <div>Click on todo to see more details</div>
       ) : (
         <div>
           <div>
             Title:
-            <span>{selectedTodo.title}</span>
+            <span>{detailsTodo!.title}</span>
           </div>
           <div>
             Description:
-            <span>{selectedTodo.description}</span>
+            <span>{detailsTodo!.description}</span>
           </div>
           <div>
             CreatedAt:
             <span>
-              {formatDistanceToNow(selectedTodo!.createdAt, {
+              {formatDistanceToNow(detailsTodo!.createdAt, {
                 addSuffix: true,
-              })}{' '}
+              })}
             </span>
           </div>
           <div>
             Deadline:
-            <span>{selectedTodo.deadline}</span>
+            <span>{detailsTodo!.deadline}</span>
           </div>
         </div>
       )}

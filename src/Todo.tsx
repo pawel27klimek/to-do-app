@@ -9,7 +9,7 @@ const Todo = observer(
     const navigate = useNavigate();
 
     const handleSelect = () => {
-      store.setSelectedtodoId(todo.id);
+      store.setSelectedTodoId(todo.id);
       navigate(`/${todo.id}`);
     };
 
@@ -20,8 +20,7 @@ const Todo = observer(
 
     const handleEdit = (event: React.MouseEvent<SVGElement, MouseEvent>) => {
       event.stopPropagation();
-      store.setSelectedtodoId(todo.id);
-      console.log(store.selectedTodoId);
+      store.setSelectedTodoId(todo.id);
       navigate(`/${todo.id}/edit`);
     };
 

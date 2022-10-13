@@ -12,12 +12,13 @@ const List = observer(({ store }: { store: ObservableTodoStore }) => {
   // ??????? jak store
   useEffect(() => {
     navigate(`/${store.selectedTodoId}`);
+    console.log(store.selectedTodoId);
   }, []);
   //// ???? takie rozwiązanie routa ???? ////
   //// ???? zmiany w appie mogły, być nie potrzebne ???? ////
-  useEffect(() => {
-    store.getTodos();
-  }, []);
+  // useEffect(() => {
+  //   store.getTodos();
+  // }, []);
 
   return (
     <div style={{ display: 'flex' }}>

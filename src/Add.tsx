@@ -35,7 +35,6 @@ const Add = observer(({ store }: { store: ObservableTodoStore }) => {
     event.preventDefault();
     store.addTodo(newTodo);
     navigate(`/${store.selectedTodoId}`);
-    setTimeout(() => {}, 2000);
     setNewTodo({
       id: Date.now(),
       title: '',
