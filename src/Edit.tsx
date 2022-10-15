@@ -1,39 +1,35 @@
 import React, { useEffect, useState } from 'react';
 import { ObservableTodoStore } from './TodoStore';
 import { observer } from 'mobx-react-lite';
-import { todo } from './types';
+import { params, todo } from './types';
 import { useNavigate, useParams } from 'react-router-dom';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
 
 const Edit = observer(({ store }: { store: ObservableTodoStore }) => {
-  // const params = useParams();
-  // const id: number = parseInt(params.id!);
-  // ???????????
-
-  // if (store.todos.length > 0) {
-  //   selectedTodo = store.todos.find(
-  //     (todo) => todo.id === store.selectedTodoId
-  //   )!;
-  // }
+  const { id } = useParams<params>();
   const navigate = useNavigate();
+
   const [editTodo, setEditTodo] = useState<todo>({
-    id: 0,
+    id: '',
     title: '',
     description: '',
-    createdAt: new Date(),
+    createdAt: '',
     deadline: '',
   });
+
   useEffect(() => {
+    store.setSelectedTodoId(id!);
+    store.setSelectedTodo();
+
     if (store.selectedTodo !== undefined) {
       const selected = store.selectedTodo;
       setEditTodo(selected);
+      ///// taki syntax i obserwowane???? moze samo id????
+    } else if (store.todos.length === 0) {
+      navigate('/');
     }
-  }, [store.selectedTodoId]);
-
-  // useEffect(() => {
-  //   const selectedTodo = store.todos.find(
-  //     (todo) => todo.id === store.selectedTodoId
-  //   );
-  // }, [store.selectedTodoId]);
+  }, [id, store.todos.length]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEditTodo((prev) => ({
@@ -45,51 +41,56 @@ const Edit = observer(({ store }: { store: ObservableTodoStore }) => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     store.editTodo(editTodo);
-    // ?? ?? czy moze w navigate uzyc editTodo.id??? wartość jest taka sama
-    navigate(`/${store.selectedTodoId}`);
+    navigate(`/${id}`);
   };
 
   return (
-    <div>
-      <form onSubmit={(event) => handleSubmit(event)}>
-        <h3>Edit</h3>
-        <label>
-          Title:
-          <input
-            type="text"
-            name="title"
-            value={editTodo.title}
-            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-              handleChange(event);
-            }}
-            autoComplete="off"
-          />
-        </label>
+    <div className="left-container">
+      <h3>Edit</h3>
 
-        <label>
-          Description:
-          <input
-            type="text"
-            name="description"
-            value={editTodo.description}
-            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-              handleChange(event);
-            }}
-            autoComplete="off"
-          />
-        </label>
-        <label>
-          Deadline:
-          <input
-            type="date"
-            name="deadline"
-            value={editTodo.deadline.toString()}
-            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-              handleChange(event);
-            }}
-          />
-        </label>
-        <button type="submit">Submit</button>
+      <form onSubmit={(event) => handleSubmit(event)}>
+        <TextField
+          className="title"
+          label="Title"
+          variant="outlined"
+          type="text"
+          name="title"
+          value={editTodo.title}
+          onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+            handleChange(event);
+          }}
+          autoComplete="off"
+        />
+        <TextField
+          className="description"
+          label="Description"
+          variant="outlined"
+          type="text"
+          name="description"
+          value={editTodo.description}
+          onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+            handleChange(event);
+          }}
+          autoComplete="off"
+        />
+        <TextField
+          className="deadline"
+          variant="outlined"
+          label="Deadline"
+          type="date"
+          name="dealine"
+          value={editTodo.deadline}
+          onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+            handleChange(event);
+          }}
+          sx={{ width: 220 }}
+          InputLabelProps={{
+            shrink: true,
+          }}
+        />
+        <Button variant="outlined" type="submit">
+          Submit
+        </Button>
       </form>
     </div>
   );

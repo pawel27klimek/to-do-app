@@ -1,7 +1,11 @@
 export type todo = {
-  id: number;
+  id: string;
   title: string;
   description: string;
-  createdAt: Date;
+  createdAt: string;
   deadline: string;
+};
+
+export type params = {
+  id: string;
 };

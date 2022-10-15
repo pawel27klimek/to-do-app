@@ -25,10 +25,20 @@ const Todo = observer(
     };
 
     return (
-      <div style={{ border: 'solid black' }} onClick={handleSelect}>
-        title:{todo.title}
-        <FiEdit3 onClick={(event) => handleEdit(event)} />
-        <FiTrash2 onClick={(event) => handleDelete(event)} />
+      <div className="card" onClick={handleSelect}>
+        <div className="card-title">{todo.title}</div>
+        <div className="card-buttons">
+          <FiEdit3
+            className="edit-button"
+            color="#271c6c"
+            onClick={(event) => handleEdit(event)}
+          />
+          <FiTrash2
+            className="delete-button"
+            // color="red"
+            onClick={(event) => handleDelete(event)}
+          />
+        </div>
       </div>
     );
   }

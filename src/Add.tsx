@@ -3,13 +3,14 @@ import { observer } from 'mobx-react-lite';
 import { todo } from './types';
 import { ObservableTodoStore } from './TodoStore';
 import { useNavigate } from 'react-router-dom';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
 
 const Add = observer(({ store }: { store: ObservableTodoStore }) => {
   const navigate = useNavigate();
 
-  const defaultDeadline = () => {
-    const date = new Date();
-    const dateInAWeek = new Date(date.setDate(date.getDate() + 7));
+  const defaultDeadline = (date: Date, delta: number) => {
+    const dateInAWeek = new Date(date.setDate(date.getDate() + delta));
     const year = dateInAWeek.toLocaleString('default', { year: 'numeric' });
     const month = dateInAWeek.toLocaleString('default', { month: '2-digit' });
     const day = dateInAWeek.toLocaleString('default', { day: '2-digit' });
@@ -17,11 +18,11 @@ const Add = observer(({ store }: { store: ObservableTodoStore }) => {
   };
 
   const [newTodo, setNewTodo] = useState<todo>({
-    id: Date.now(),
+    id: Date.now().toString(),
     title: '',
     description: '',
-    createdAt: new Date(),
-    deadline: defaultDeadline(),
+    createdAt: new Date().toString(),
+    deadline: defaultDeadline(new Date(), 7),
   });
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -34,57 +35,64 @@ const Add = observer(({ store }: { store: ObservableTodoStore }) => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     store.addTodo(newTodo);
-    navigate(`/${store.selectedTodoId}`);
+    store.setSelectedTodoId(newTodo.id);
+    navigate(`/${newTodo.id}`);
     setNewTodo({
-      id: Date.now(),
+      id: Date.now().toString(),
       title: '',
       description: '',
-      createdAt: new Date(),
-      deadline: defaultDeadline(),
+      createdAt: '',
+      deadline: '',
     });
   };
 
   return (
-    <div>
+    <div className="left-container">
+      <h3>Add</h3>
       <form onSubmit={(event) => handleSubmit(event)}>
-        <h3>Add</h3>
-        <label>
-          Title:
-          <input
-            type="text"
-            name="title"
-            value={newTodo.title}
-            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-              handleChange(event);
-            }}
-            autoComplete="off"
-          />
-        </label>
+        <TextField
+          className="title"
+          label="Title"
+          variant="outlined"
+          type="text"
+          name="title"
+          value={newTodo.title}
+          onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+            handleChange(event);
+          }}
+          autoComplete="off"
+        />
 
-        <label>
-          Description:
-          <input
-            type="text"
-            name="description"
-            value={newTodo.description}
-            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-              handleChange(event);
-            }}
-            autoComplete="off"
-          />
-        </label>
-        <label>
-          Deadline:
-          <input
-            type="date"
-            name="deadline"
-            value={newTodo.deadline}
-            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-              handleChange(event);
-            }}
-          />
-        </label>
-        <button type="submit">Submit</button>
+        <TextField
+          className="description"
+          label="Description"
+          variant="outlined"
+          type="text"
+          name="description"
+          value={newTodo.description}
+          onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+            handleChange(event);
+          }}
+          autoComplete="off"
+        />
+        <TextField
+          className="deadline"
+          variant="outlined"
+          label="Deadline"
+          type="date"
+          name="dealine"
+          value={newTodo.deadline}
+          onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+            handleChange(event);
+          }}
+          sx={{ width: 220 }}
+          InputLabelProps={{
+            shrink: true,
+          }}
+        />
+        <Button variant="outlined" type="submit">
+          Submit
+        </Button>
       </form>
     </div>
   );

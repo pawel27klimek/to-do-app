@@ -1,98 +1,74 @@
-import {
-  makeObservable,
-  observable,
-  action,
-  runInAction,
-  computed,
-  autorun,
-} from 'mobx';
-import { MobXGlobals } from 'mobx/dist/internal';
+import { makeObservable, observable, action, runInAction } from 'mobx';
 import { todo } from './types';
-
-type loadedTodo = {
-  id: string;
-  title: string;
-  description: string;
-  createdAt: string;
-  deadline: string;
-};
 
 export class ObservableTodoStore {
   todos: todo[] = [
     // {
-    //   id: 0,
+    //   id: '0',
     //   title: 'The first one',
     //   description: 'First short not long description',
-    //   createdAt: new Date(),
+    //   createdAt: '2022-10-09',
     //   deadline: '2022-10-09',
     // },
     // {
-    //   id: 1,
+    //   id: '1',
     //   title: 'The second one',
     //   description: 'Second short not long description',
-    //   createdAt: new Date(),
+    //   createdAt: '2022-10-09',
     //   deadline: '2022-10-09',
     // },
     // {
-    //   id: 2,
+    //   id: '2',
     //   title: 'The third one',
     //   description: 'Third short not long description',
-    //   createdAt: new Date(),
+    //   createdAt: '2022-10-09',
     //   deadline: '2022-10-09',
     // },
   ];
-
-  // moze undefined albo null??
-
-  // this.todos[0].id czy 0????
-  selectedTodoId: number | undefined = 0; //this.todos[0].id;
+  selectedTodoId: string | undefined = ''; //this.todos[0].id;
   isLoading: boolean = false;
-  // firstRun: boolean = true;
+  selectedTodo: todo | undefined;
 
   constructor() {
     makeObservable(this, {
       todos: observable,
       selectedTodoId: observable,
       isLoading: observable,
+      selectedTodo: observable,
       addTodo: action,
       deleteTodo: action,
       editTodo: action,
+      setSelectedTodo: action,
       setSelectedTodoId: action,
-      selectedTodo: computed,
-    });
-    autorun(async () => {
-      // dzięki firstrun przy odświezaniu nie odpala funkcji i dzięki temu nie ma loadingu
-      // if (this.firstRun) {
-      this.isLoading = true;
-      const receivedTodos = await localStorage.getItem('saved_state')!;
-      const parsedTodos = await JSON.parse(receivedTodos);
-      const formatedTodos: todo[] = parsedTodos.map(
-        (loadedTodo: loadedTodo) => ({
-          ...loadedTodo,
-          id: parseInt(loadedTodo.id),
-          createdAt: new Date(loadedTodo.createdAt),
-        })
-      );
-      // setTimeout is simulating big size data loading
-      setTimeout(() => {
-        runInAction(() => {
-          this.todos = formatedTodos;
-          this.isLoading = false;
-          // if (this.todos.length > 0) {
-          // this.selectedTodoId = this.selectedTodo!.id;
-          // }
-        });
-      }, 1000);
-
-      // }
     });
   }
 
-  get selectedTodo() {
-    const selectedTodo = this.todos.find(
-      (todo) => todo.id === this.selectedTodoId
-    );
-    return selectedTodo;
+  async getTodos() {
+    runInAction(() => (this.isLoading = true));
+    const receivedTodos = localStorage.getItem('saved_state')!;
+    const formatedTodos: todo[] = await JSON.parse(receivedTodos);
+    setTimeout(() => {
+      runInAction(() => {
+        this.todos = formatedTodos;
+        this.isLoading = false;
+      });
+    }, 1000);
+  }
+
+  setSelectedTodo() {
+    try {
+      const selectedTodo = this.todos.find(
+        (todo) => todo.id === this.selectedTodoId
+      );
+      console.log(this.selectedTodoId, 'w setSelectedTodo');
+      this.selectedTodo = selectedTodo;
+    } catch (e) {}
+  }
+
+  setSelectedTodoId(id: string) {
+    try {
+      this.selectedTodoId = id;
+    } catch (e) {}
   }
 
   addTodo({ id, title, description, createdAt, deadline }: todo) {
@@ -115,7 +91,7 @@ export class ObservableTodoStore {
     } catch (e) {}
   }
 
-  async deleteTodo(id: number) {
+  deleteTodo(id: string) {
     try {
       const updatedTodos = this.todos.filter((todo) => todo.id !== id);
       if (updatedTodos.length > 0) {
@@ -129,7 +105,7 @@ export class ObservableTodoStore {
     } catch (e) {}
   }
 
-  async editTodo({ id, title, description, createdAt, deadline }: todo) {
+  editTodo({ id, title, description, createdAt, deadline }: todo) {
     try {
       this.isLoading = true;
 
@@ -144,12 +120,6 @@ export class ObservableTodoStore {
 
       this.isLoading = false;
       localStorage.setItem('saved_state', JSON.stringify(this.todos));
-    } catch (e) {}
-  }
-
-  setSelectedTodoId(id: number) {
-    try {
-      this.selectedTodoId = id;
     } catch (e) {}
   }
 }

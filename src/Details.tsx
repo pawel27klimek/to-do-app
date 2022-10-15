@@ -1,50 +1,34 @@
-import React, { useEffect, useState } from 'react';
-import { todo } from './types';
+import { useEffect, useState } from 'react';
+import { params, todo } from './types';
 import { ObservableTodoStore } from './TodoStore';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 
-type todoDetails = {
-  id: number;
-  title: string;
-  description: string;
-  createdAt: Date;
-  deadline: string;
-};
-
 const Details = observer(({ store }: { store: ObservableTodoStore }) => {
-  // const params = useParams();
-  // const id: number = parseInt(params.id!);
-  //?????????????
+  const { id } = useParams<params>();
+  const navigate = useNavigate();
 
-  const [showDetails, setShowDetails] = useState(false);
-  const [detailsTodo, setDetailsTodo] = useState<todoDetails>();
+  const [detailsTodo, setDetailsTodo] = useState<todo>();
 
   useEffect(() => {
+    store.setSelectedTodoId(id!);
+    store.setSelectedTodo();
     if (store.selectedTodo !== undefined) {
       const selected = store.selectedTodo;
       setDetailsTodo(selected);
-      setShowDetails(true);
-    } else {
-      setShowDetails(false);
+      ///// taki syntax i obserwowane ???? moe samo id????
+    } else if (store.todos.length === 0) {
+      navigate('/');
     }
-  }, [store.selectedTodoId]);
-
-  // if (store.todos.length > 0) {
-  //   selectedTodo = store.todos.find(
-  //     (todo) => todo.id === store.selectedTodoId
-  //   )!;
-  // }
+  }, [id, store.todos.length]);
 
   return (
-    <div>
-      <h1>Details</h1>
-
-      {!showDetails ? (
-        <div>Click on todo to see more details</div>
-      ) : (
+    <div className="left-container">
+      {detailsTodo !== undefined ? (
         <div>
+          <h1>Details</h1>
+
           <div>
             Title:
             <span>{detailsTodo!.title}</span>
@@ -56,16 +40,22 @@ const Details = observer(({ store }: { store: ObservableTodoStore }) => {
           <div>
             CreatedAt:
             <span>
-              {formatDistanceToNow(detailsTodo!.createdAt, {
+              {formatDistanceToNow(new Date(detailsTodo!.createdAt), {
                 addSuffix: true,
               })}
             </span>
           </div>
           <div>
             Deadline:
-            <span>{detailsTodo!.deadline}</span>
+            <span>
+              {formatDistanceToNow(new Date(detailsTodo!.deadline), {
+                addSuffix: true,
+              })}
+            </span>
           </div>
         </div>
+      ) : (
+        <></>
       )}
     </div>
   );
