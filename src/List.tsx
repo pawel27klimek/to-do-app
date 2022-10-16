@@ -9,7 +9,6 @@ import Button from '@mui/material/Button';
 const List = observer(({ store }: { store: ObservableTodoStore }) => {
   const navigate = useNavigate();
   let location = useLocation();
-  console.log(location.pathname);
 
   const [showAddButton, setShowAddButton] = useState<boolean>(true);
 
@@ -18,20 +17,26 @@ const List = observer(({ store }: { store: ObservableTodoStore }) => {
   }, []);
 
   useEffect(() => {
-    if (store.todos.length > 0 && store.selectedTodo === undefined) {
-      const firstTodoId = store.todos[0].id;
-      store.setSelectedTodo();
-      navigate(`/${firstTodoId}`);
-    }
-  }, [store.todos.length]);
-
-  useEffect(() => {
     if (location.pathname.includes('add')) {
       setShowAddButton(false);
     } else {
       setShowAddButton(true);
     }
-  }, [location]);
+  }, [location.pathname]);
+
+  useEffect(() => {
+    console.log(location.pathname);
+    if (
+      store.todos.length > 0 &&
+      store.selectedTodo === undefined &&
+      !location.pathname.includes('add')
+    ) {
+      const firstTodoId = store.todos[0].id;
+      store.setSelectedTodoId(firstTodoId);
+      console.log('dymy useeffectowe');
+      navigate(`/${firstTodoId}`);
+    }
+  }, [store.todos.length]);
 
   return (
     <div className="main-container">

@@ -2,13 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { ObservableTodoStore } from './TodoStore';
 import { observer } from 'mobx-react-lite';
 import { params, todo } from './types';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 
 const Edit = observer(({ store }: { store: ObservableTodoStore }) => {
   const { id } = useParams<params>();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [editTodo, setEditTodo] = useState<todo>({
     id: '',
@@ -20,15 +21,18 @@ const Edit = observer(({ store }: { store: ObservableTodoStore }) => {
 
   useEffect(() => {
     store.setSelectedTodoId(id!);
-    store.setSelectedTodo();
 
-    if (store.selectedTodo !== undefined) {
-      const selected = store.selectedTodo;
-      setEditTodo(selected);
-      ///// taki syntax i obserwowane???? moze samo id????
-    } else if (store.todos.length === 0) {
-      navigate('/');
-    }
+    setTimeout(() => {
+      store.setSelectedTodo();
+      if (store.selectedTodo !== undefined) {
+        const selected = store.selectedTodo;
+        setEditTodo(selected);
+        ///// taki syntax i obserwowane???? moze samo id????
+      }
+      if (store.todos.length === 0) {
+        navigate('/');
+      }
+    }, 1000);
   }, [id, store.todos.length]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,12 +45,13 @@ const Edit = observer(({ store }: { store: ObservableTodoStore }) => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     store.editTodo(editTodo);
-    navigate(`/${id}`);
+    navigate(`/${id}/edit`);
   };
+  console.log(location);
 
   return (
     <div className="left-container">
-      <h3>Edit</h3>
+      <h2>Edit</h2>
 
       <form onSubmit={(event) => handleSubmit(event)}>
         <TextField

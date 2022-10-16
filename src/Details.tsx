@@ -18,40 +18,45 @@ const Details = observer(({ store }: { store: ObservableTodoStore }) => {
       const selected = store.selectedTodo;
       setDetailsTodo(selected);
       ///// taki syntax i obserwowane ???? moe samo id????
-    } else if (store.todos.length === 0) {
-      navigate('/');
     }
+    setTimeout(() => {
+      if (store.todos.length === 0) {
+        navigate('/');
+      }
+    }, 1000);
   }, [id, store.todos.length]);
 
   return (
     <div className="left-container">
-      {detailsTodo !== undefined ? (
-        <div>
-          <h1>Details</h1>
+      {detailsTodo !== undefined && store.isLoading === false ? (
+        <div className="details-container">
+          <h2>Details</h2>
 
-          <div>
-            Title:
-            <span>{detailsTodo!.title}</span>
+          <div className="title">
+            {/* Title: */}
+            <h4>{detailsTodo!.title}</h4>
           </div>
-          <div>
-            Description:
+          <div className="description">
+            {/* Description: */}
             <span>{detailsTodo!.description}</span>
           </div>
-          <div>
-            CreatedAt:
-            <span>
-              {formatDistanceToNow(new Date(detailsTodo!.createdAt), {
-                addSuffix: true,
-              })}
-            </span>
-          </div>
-          <div>
-            Deadline:
-            <span>
-              {formatDistanceToNow(new Date(detailsTodo!.deadline), {
-                addSuffix: true,
-              })}
-            </span>
+          <div className="date-details">
+            <div>
+              Created:{' '}
+              <span>
+                {formatDistanceToNow(new Date(detailsTodo!.createdAt), {
+                  addSuffix: true,
+                })}
+              </span>
+            </div>
+            <div>
+              Deadline:{' '}
+              <span>
+                {formatDistanceToNow(new Date(detailsTodo!.deadline), {
+                  addSuffix: true,
+                })}
+              </span>
+            </div>
           </div>
         </div>
       ) : (

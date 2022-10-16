@@ -60,7 +60,6 @@ export class ObservableTodoStore {
       const selectedTodo = this.todos.find(
         (todo) => todo.id === this.selectedTodoId
       );
-      console.log(this.selectedTodoId, 'w setSelectedTodo');
       this.selectedTodo = selectedTodo;
     } catch (e) {}
   }
@@ -83,8 +82,9 @@ export class ObservableTodoStore {
             createdAt: createdAt,
             deadline: deadline,
           });
-          localStorage.setItem('saved_state', JSON.stringify(this.todos));
           this.selectedTodoId = id;
+          localStorage.setItem('saved_state', JSON.stringify(this.todos));
+
           this.isLoading = false;
         });
       }, 1000);
@@ -115,11 +115,14 @@ export class ObservableTodoStore {
         }
         return { id, title, description, createdAt, deadline };
       });
-      this.todos = updatedarray;
-      this.selectedTodoId = id;
-
-      this.isLoading = false;
-      localStorage.setItem('saved_state', JSON.stringify(this.todos));
+      setTimeout(() => {
+        runInAction(() => {
+          this.todos = updatedarray;
+          this.selectedTodoId = id;
+          localStorage.setItem('saved_state', JSON.stringify(this.todos));
+          this.isLoading = false;
+        });
+      }, 1000);
     } catch (e) {}
   }
 }

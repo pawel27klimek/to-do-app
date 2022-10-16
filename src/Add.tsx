@@ -36,7 +36,9 @@ const Add = observer(({ store }: { store: ObservableTodoStore }) => {
     event.preventDefault();
     store.addTodo(newTodo);
     store.setSelectedTodoId(newTodo.id);
-    navigate(`/${newTodo.id}`);
+    setTimeout(() => {
+      navigate(`/${newTodo.id}`);
+    }, 1000);
     setNewTodo({
       id: Date.now().toString(),
       title: '',
@@ -48,7 +50,7 @@ const Add = observer(({ store }: { store: ObservableTodoStore }) => {
 
   return (
     <div className="left-container">
-      <h3>Add</h3>
+      <h2>Add new todo</h2>
       <form onSubmit={(event) => handleSubmit(event)}>
         <TextField
           className="title"
