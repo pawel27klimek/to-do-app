@@ -1,111 +1,127 @@
-$fontsize: 15px;
-
+@import url('https://fonts.googleapis.com/css2?family=RocknRoll+One&display=swap');
+$fontsize: 14px;
+$font-color: #565656;
+$shadow: 15px 15px 20px #4784d4;
+$titleColor: #019edc;
+$color: #5eccf7;
 body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  font-family: 'RocknRoll One', sans-serif;
+  color: $font-color;
   .app {
     margin-top: 5%;
     .main-container {
       .main-title {
         display: flex;
         justify-content: center;
+        align-items: center;
         margin-bottom: 2rem;
-        // display: inline;
         text-align: center;
-        // margin-bottom: 4rem;
-        color: #ffffff;
+        color: $titleColor;
 
-        text-shadow: 0 0 5px #252528, 3px -1px 5px #303137;
+        font-size: $fontsize + 9;
+        img {
+          margin-top: 15px;
+          height: 90px;
+        }
       }
       .content {
         display: flex;
         justify-content: space-around;
+        flex-wrap: wrap;
+        @media screen and (max-width: 1000px) {
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+        }
+
         .left-container {
-          // display: flex;
-          // flex-direction: column;
-          // justify-content: flex-start;
-          // align-items: flex-end;
-          width: 45vw;
-          // margin-right: 5vw;
-          // .add-container .edit-container {
-          h2 {
-            display: flex;
-            justify-content: center;
+          @media screen and (max-width: 1000px) {
+            width: 100%;
           }
-          form {
+          display: flex;
+          justify-content: center;
+          width: 45vw;
+          .edit-container,
+          .add-container {
             display: flex;
             flex-direction: column;
-            // justify-content: center;
-            align-items: center;
-
-            .title {
-              margin: 1rem auto;
-              input {
-                min-width: 192px;
-              }
+            h2 {
+              display: flex;
+              justify-content: center;
+              color: $titleColor;
+              font-size: $fontsize + 20;
             }
 
-            .description {
-              margin: 1rem auto;
-              input {
-                min-width: 192px;
+            form {
+              display: flex;
+              flex-direction: column;
+
+              .title {
+                margin: 1rem auto;
+                input {
+                  min-width: 192px;
+                  box-shadow: $shadow;
+                }
               }
-            }
-            .deadline {
-              margin: 1rem auto;
-            }
-            button {
-              margin: 0.5rem auto;
+
+              .description {
+                margin: 1rem auto;
+                input {
+                  min-width: 192px;
+                  box-shadow: $shadow;
+                }
+              }
+              .deadline {
+                min-width: 192px;
+                margin: 1rem auto;
+                box-shadow: $shadow;
+              }
+              button {
+                margin: 0.5rem auto;
+                box-shadow: $shadow;
+              }
             }
           }
-          .details-container {
-            margin-left: 250px;
+
+          .details {
             display: flex;
             flex-direction: column;
             align-items: flex-start;
-
-            background: radial-gradient(
-              circle,
-              hsla(220, 81%, 87%, 0.9) 0%,
-              hsla(220, 73%, 91%, 0.9) 100%
-            );
+            justify-content: space-between;
+            background: $color;
+            box-shadow: $shadow;
             margin-bottom: 1rem;
-            height: 40rem;
+            height: 22rem;
             width: 25rem;
             border-radius: 0.5rem;
-            padding: 1rem;
-            // height: 60%;
-            // width: 100%;
-            // position: relative;
-            // display: flex;
-            // justify-content: flex-start;
-
-            // padding: 1rem;
-            font-size: $fontsize + 3;
-
+            padding: 2rem;
+            font-size: $fontsize + 2;
             .date-details {
               margin-top: 1rem;
-              font-size: $fontsize - 1;
+              font-size: $fontsize;
             }
           }
         }
         .right-container {
+          @media screen and (max-width: 1000px) {
+            width: 100%;
+            align-items: center;
+            margin-top: 20px;
+          }
           display: flex;
           flex-direction: column;
           align-items: flex-start;
-          // justify-content: flex-start;
           width: 45vw;
-          // margin-left: 5vw;
           .add-button-box {
             min-height: 68.5px;
             button {
+              color: $font-color;
+              background-color: $color;
               margin-bottom: 2rem;
+              box-shadow: $shadow;
             }
           }
           .cards-container {
@@ -113,33 +129,25 @@ body {
             display: flex;
             flex-direction: column;
             .card {
-              background: radial-gradient(
-                circle,
-                hsla(220, 81%, 87%, 0.9) 0%,
-                hsla(220, 73%, 91%, 0.9) 100%
-              );
-              margin-bottom: 1rem;
+              background: $color;
+
+              box-shadow: $shadow;
+
+              margin-bottom: 1.9rem;
               height: 4rem;
               width: 25rem;
               border-radius: 0.5rem;
               padding: 1rem;
               .card-title {
                 height: 60%;
-                // width: 100%;
-                // position: relative;
-                // display: flex;
-                // justify-content: flex-start;
 
-                // padding: 1rem;
-                font-size: $fontsize + 3;
+                font-size: $fontsize + 1;
               }
               .card-buttons {
-                // width: 100%;
                 display: flex;
                 justify-content: flex-end;
                 margin: 0 0.5rem;
-                // padding: 1.5rem;
-                font-size: $fontsize + 8;
+                font-size: $fontsize + 7;
 
                 cursor: pointer;
                 .edit-button {
@@ -157,22 +165,3 @@ body {
     }
   }
 }
-
-@media Screen and (max-width: 640px) {
-  .displaytodos {
-    overflow: hidden;
-    margin-top: 2rem;
-  }
-  .displaytodos ul {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-left: 0;
-    align-self: center;
-  }
-  .card {
-    margin-right: 0;
-  }
-}
-
-// ??????????????? jak te cssy zapisywać????

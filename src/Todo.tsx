@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { todo } from './types';
 import { observer } from 'mobx-react-lite';
 import { ObservableTodoStore } from './TodoStore';
+import { motion } from 'framer-motion';
 
 const Todo = observer(
   ({ todo, store }: { todo: todo; store: ObservableTodoStore }) => {
@@ -10,7 +11,6 @@ const Todo = observer(
     const paramsId = useParams().id!;
 
     const handleSelect = () => {
-      // store.setSelectedTodoId(todo.id);
       navigate(`/${todo.id}`);
     };
 
@@ -24,12 +24,18 @@ const Todo = observer(
 
     const handleEdit = (event: React.MouseEvent<SVGElement, MouseEvent>) => {
       event.stopPropagation();
-      // store.setSelectedTodoId(todo.id);
       navigate(`/${todo.id}/edit`);
     };
 
     return (
-      <div className="card" onClick={handleSelect}>
+      <motion.div
+        className="card"
+        onClick={handleSelect}
+        whileHover={{ scale: 1.1 }}
+        initial={{ opacity: 0, scale: 0.5 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.5 }}
+      >
         <div className="card-title">{todo.title}</div>
         <div className="card-buttons">
           <FiEdit3
@@ -39,11 +45,10 @@ const Todo = observer(
           />
           <FiTrash2
             className="delete-button"
-            // color="red"
             onClick={(event) => handleDelete(event)}
           />
         </div>
-      </div>
+      </motion.div>
     );
   }
 );

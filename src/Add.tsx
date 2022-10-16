@@ -5,6 +5,8 @@ import { ObservableTodoStore } from './TodoStore';
 import { useNavigate } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import { motion } from 'framer-motion';
+import { v4 as uuidv4 } from 'uuid';
 
 const Add = observer(({ store }: { store: ObservableTodoStore }) => {
   const navigate = useNavigate();
@@ -18,7 +20,7 @@ const Add = observer(({ store }: { store: ObservableTodoStore }) => {
   };
 
   const [newTodo, setNewTodo] = useState<todo>({
-    id: Date.now().toString(),
+    id: uuidv4(),
     title: '',
     description: '',
     createdAt: new Date().toString(),
@@ -36,21 +38,19 @@ const Add = observer(({ store }: { store: ObservableTodoStore }) => {
     event.preventDefault();
     store.addTodo(newTodo);
     navigate(`/${newTodo.id}`);
-    setNewTodo({
-      id: Date.now().toString(),
-      title: '',
-      description: '',
-      createdAt: '',
-      deadline: '',
-    });
   };
 
   return (
-    <div className="left-container">
-      <h2>Add new todo</h2>
+    <motion.div
+      initial={{ opacity: 0, scale: 0.5 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.5 }}
+      className="add-container"
+    >
+      <h2>Add new</h2>
       <form onSubmit={(event) => handleSubmit(event)}>
         <TextField
-          inputProps={{ maxLength: 20 }}
+          inputProps={{ maxLength: 30 }}
           className="title"
           label="Title"
           variant="outlined"
@@ -64,6 +64,7 @@ const Add = observer(({ store }: { store: ObservableTodoStore }) => {
         />
 
         <TextField
+          inputProps={{ maxLength: 300 }}
           className="description"
           label="Description"
           variant="outlined"
@@ -94,7 +95,7 @@ const Add = observer(({ store }: { store: ObservableTodoStore }) => {
           Submit
         </Button>
       </form>
-    </div>
+    </motion.div>
   );
 });
 

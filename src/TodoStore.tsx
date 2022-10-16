@@ -1,30 +1,38 @@
 import { makeObservable, observable, action, runInAction } from 'mobx';
 import { todo } from './types';
 
+const testData = [
+  {
+    id: '56ba7c75-b51c-480b-badb-45ce531ebdab',
+    title: 'Lorem Ipsum is simply dummy te',
+    description:
+      'Lorem Ipsum is simply dummy text of the printing a…s survived not only five centuries, but also the ',
+    createdAt:
+      'Sun Oct 16 2022 21:06:50 GMT+0200 (Central European Summer Time)',
+    deadline: '2022-10-23',
+  },
+  {
+    id: '363fba6a-6bc5-4bc8-af1c-a81ee6dadb0f',
+    title: 'Lorem Ipsum is simply dummy te',
+    description:
+      'Lorem Ipsum is simply dummy text of the printing a…s survived not only five centuries, but also the ',
+    createdAt:
+      'Sun Oct 16 2022 21:07:41 GMT+0200 (Central European Summer Time)',
+    deadline: '2022-10-23',
+  },
+  {
+    id: 'd58e14b1-0ed4-42d4-9119-0257453ae02b',
+    title: 'Lorem Ipsum is simply dummy te',
+    description:
+      'Lorem Ipsum is simply dummy text of the printing a…s survived not only five centuries, but also the ',
+    createdAt:
+      'Sun Oct 16 2022 21:08:17 GMT+0200 (Central European Summer Time)',
+    deadline: '2022-10-23',
+  },
+];
+
 export class ObservableTodoStore {
-  todos: todo[] = [
-    // {
-    //   id: '0',
-    //   title: 'The first one',
-    //   description: 'First short not long description',
-    //   createdAt: '2022-10-09',
-    //   deadline: '2022-10-09',
-    // },
-    // {
-    //   id: '1',
-    //   title: 'The second one',
-    //   description: 'Second short not long description',
-    //   createdAt: '2022-10-09',
-    //   deadline: '2022-10-09',
-    // },
-    // {
-    //   id: '2',
-    //   title: 'The third one',
-    //   description: 'Third short not long description',
-    //   createdAt: '2022-10-09',
-    //   deadline: '2022-10-09',
-    // },
-  ];
+  todos: todo[] = [];
   isLoading: boolean = false;
   selectedTodo: todo | undefined;
 
@@ -43,10 +51,12 @@ export class ObservableTodoStore {
 
   async getTodos() {
     try {
+      if (!localStorage.getItem('saved_state')) {
+        localStorage.setItem('saved_state', JSON.stringify(testData));
+      }
       this.isLoading = true;
       const receivedTodos = localStorage.getItem('saved_state')!;
       const formatedTodos: todo[] = await JSON.parse(receivedTodos);
-      console.log('odpala się getTodos');
       setTimeout(() => {
         runInAction(() => {
           this.todos = formatedTodos;
@@ -66,17 +76,18 @@ export class ObservableTodoStore {
   addTodo({ id, title, description, createdAt, deadline }: todo) {
     try {
       this.isLoading = true;
+      const newTodo = {
+        id: id,
+        title: title,
+        description: description,
+        createdAt: createdAt,
+        deadline: deadline,
+      };
+      console.log(newTodo);
       setTimeout(() => {
         runInAction(() => {
-          this.todos.unshift({
-            id: id,
-            title: title,
-            description: description,
-            createdAt: createdAt,
-            deadline: deadline,
-          });
+          this.todos.unshift(newTodo);
           localStorage.setItem('saved_state', JSON.stringify(this.todos));
-
           this.isLoading = false;
         });
       }, 1000);

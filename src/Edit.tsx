@@ -5,6 +5,7 @@ import { params, todo } from './types';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import { motion } from 'framer-motion';
 
 const Edit = observer(({ store }: { store: ObservableTodoStore }) => {
   const { id } = useParams<params>();
@@ -40,12 +41,17 @@ const Edit = observer(({ store }: { store: ObservableTodoStore }) => {
   };
 
   return (
-    <div className="left-container">
+    <motion.div
+      initial={{ opacity: 0, scale: 0.5 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.5 }}
+      className="edit-container"
+    >
       <h2>Edit</h2>
 
       <form onSubmit={(event) => handleSubmit(event)}>
         <TextField
-          inputProps={{ maxLength: 20 }}
+          inputProps={{ maxLength: 30 }}
           className="title"
           label="Title"
           variant="outlined"
@@ -58,6 +64,7 @@ const Edit = observer(({ store }: { store: ObservableTodoStore }) => {
           autoComplete="off"
         />
         <TextField
+          inputProps={{ maxLength: 300 }}
           className="description"
           label="Description"
           variant="outlined"
@@ -88,7 +95,7 @@ const Edit = observer(({ store }: { store: ObservableTodoStore }) => {
           Submit
         </Button>
       </form>
-    </div>
+    </motion.div>
   );
 });
 

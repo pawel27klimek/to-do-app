@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 import { params, todo } from './types';
 import { ObservableTodoStore } from './TodoStore';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
+import { motion } from 'framer-motion';
 
 const Details = observer(({ store }: { store: ObservableTodoStore }) => {
   const { id } = useParams<params>();
-  const navigate = useNavigate();
 
   const [detailsTodo, setDetailsTodo] = useState<todo>();
 
@@ -17,17 +17,18 @@ const Details = observer(({ store }: { store: ObservableTodoStore }) => {
   }, [id, store.todos.length]);
 
   return (
-    <div className="left-container">
+    <motion.div
+      initial={{ opacity: 0, scale: 0.5 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.5 }}
+      className="details-container"
+    >
       {detailsTodo !== undefined && store.isLoading === false ? (
-        <div className="details-container">
-          <h2>Details</h2>
-
+        <div className="details">
           <div className="title">
-            {/* Title: */}
-            <h4>{detailsTodo!.title}</h4>
+            <h3>{detailsTodo!.title}</h3>
           </div>
           <div className="description">
-            {/* Description: */}
             <span>{detailsTodo!.description}</span>
           </div>
           <div className="date-details">
@@ -49,10 +50,8 @@ const Details = observer(({ store }: { store: ObservableTodoStore }) => {
             </div>
           </div>
         </div>
-      ) : (
-        <></>
-      )}
-    </div>
+      ) : null}
+    </motion.div>
   );
 });
 

@@ -1,4 +1,4 @@
-import { Routes, Route, Link, Outlet } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import Details from './Details';
 import Add from './Add';
 import Edit from './Edit';
