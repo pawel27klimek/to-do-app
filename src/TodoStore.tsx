@@ -25,48 +25,41 @@ export class ObservableTodoStore {
     //   deadline: '2022-10-09',
     // },
   ];
-  selectedTodoId: string | undefined = ''; //this.todos[0].id;
   isLoading: boolean = false;
   selectedTodo: todo | undefined;
 
   constructor() {
     makeObservable(this, {
       todos: observable,
-      selectedTodoId: observable,
       isLoading: observable,
       selectedTodo: observable,
+      getTodos: action,
+      getTodo: action,
       addTodo: action,
       deleteTodo: action,
       editTodo: action,
-      setSelectedTodo: action,
-      setSelectedTodoId: action,
     });
   }
 
   async getTodos() {
-    runInAction(() => (this.isLoading = true));
-    const receivedTodos = localStorage.getItem('saved_state')!;
-    const formatedTodos: todo[] = await JSON.parse(receivedTodos);
-    setTimeout(() => {
-      runInAction(() => {
-        this.todos = formatedTodos;
-        this.isLoading = false;
-      });
-    }, 1000);
-  }
-
-  setSelectedTodo() {
     try {
-      const selectedTodo = this.todos.find(
-        (todo) => todo.id === this.selectedTodoId
-      );
-      this.selectedTodo = selectedTodo;
+      this.isLoading = true;
+      const receivedTodos = localStorage.getItem('saved_state')!;
+      const formatedTodos: todo[] = await JSON.parse(receivedTodos);
+      console.log('odpala się getTodos');
+      setTimeout(() => {
+        runInAction(() => {
+          this.todos = formatedTodos;
+          this.isLoading = false;
+        });
+      }, 1000);
     } catch (e) {}
   }
 
-  setSelectedTodoId(id: string) {
+  getTodo(id: string) {
     try {
-      this.selectedTodoId = id;
+      const selected = this.todos.find((todo) => todo.id === id);
+      this.selectedTodo = selected;
     } catch (e) {}
   }
 
@@ -75,14 +68,13 @@ export class ObservableTodoStore {
       this.isLoading = true;
       setTimeout(() => {
         runInAction(() => {
-          this.todos.push({
+          this.todos.unshift({
             id: id,
             title: title,
             description: description,
             createdAt: createdAt,
             deadline: deadline,
           });
-          this.selectedTodoId = id;
           localStorage.setItem('saved_state', JSON.stringify(this.todos));
 
           this.isLoading = false;
@@ -91,17 +83,15 @@ export class ObservableTodoStore {
     } catch (e) {}
   }
 
-  deleteTodo(id: string) {
+  deleteTodo(id: string, paramsId: string) {
     try {
       const updatedTodos = this.todos.filter((todo) => todo.id !== id);
-      if (updatedTodos.length > 0) {
-        const idFirstElementAfterUpdate = updatedTodos[0].id;
-        this.selectedTodoId = idFirstElementAfterUpdate;
-      } else {
-        this.selectedTodoId = undefined;
-      }
       this.todos = updatedTodos;
       localStorage.setItem('saved_state', JSON.stringify(this.todos));
+      if (id === paramsId) {
+        return false;
+      }
+      return true;
     } catch (e) {}
   }
 
@@ -115,10 +105,9 @@ export class ObservableTodoStore {
         }
         return { id, title, description, createdAt, deadline };
       });
+      this.todos = updatedarray;
       setTimeout(() => {
         runInAction(() => {
-          this.todos = updatedarray;
-          this.selectedTodoId = id;
           localStorage.setItem('saved_state', JSON.stringify(this.todos));
           this.isLoading = false;
         });

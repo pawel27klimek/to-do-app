@@ -24,20 +24,6 @@ const List = observer(({ store }: { store: ObservableTodoStore }) => {
     }
   }, [location.pathname]);
 
-  useEffect(() => {
-    console.log(location.pathname);
-    if (
-      store.todos.length > 0 &&
-      store.selectedTodo === undefined &&
-      !location.pathname.includes('add')
-    ) {
-      const firstTodoId = store.todos[0].id;
-      store.setSelectedTodoId(firstTodoId);
-      console.log('dymy useeffectowe');
-      navigate(`/${firstTodoId}`);
-    }
-  }, [store.todos.length]);
-
   return (
     <div className="main-container">
       <div className="main-title">

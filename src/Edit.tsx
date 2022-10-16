@@ -20,19 +20,10 @@ const Edit = observer(({ store }: { store: ObservableTodoStore }) => {
   });
 
   useEffect(() => {
-    store.setSelectedTodoId(id!);
-
-    setTimeout(() => {
-      store.setSelectedTodo();
-      if (store.selectedTodo !== undefined) {
-        const selected = store.selectedTodo;
-        setEditTodo(selected);
-        ///// taki syntax i obserwowane???? moze samo id????
-      }
-      if (store.todos.length === 0) {
-        navigate('/');
-      }
-    }, 1000);
+    store.getTodo(id!);
+    if (store.selectedTodo !== undefined) {
+      setEditTodo(store.selectedTodo);
+    }
   }, [id, store.todos.length]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -45,9 +36,8 @@ const Edit = observer(({ store }: { store: ObservableTodoStore }) => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     store.editTodo(editTodo);
-    navigate(`/${id}/edit`);
+    navigate(`/${id}`);
   };
-  console.log(location);
 
   return (
     <div className="left-container">
@@ -55,6 +45,7 @@ const Edit = observer(({ store }: { store: ObservableTodoStore }) => {
 
       <form onSubmit={(event) => handleSubmit(event)}>
         <TextField
+          inputProps={{ maxLength: 20 }}
           className="title"
           label="Title"
           variant="outlined"

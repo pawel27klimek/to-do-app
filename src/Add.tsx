@@ -35,10 +35,7 @@ const Add = observer(({ store }: { store: ObservableTodoStore }) => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     store.addTodo(newTodo);
-    store.setSelectedTodoId(newTodo.id);
-    setTimeout(() => {
-      navigate(`/${newTodo.id}`);
-    }, 1000);
+    navigate(`/${newTodo.id}`);
     setNewTodo({
       id: Date.now().toString(),
       title: '',
@@ -53,6 +50,7 @@ const Add = observer(({ store }: { store: ObservableTodoStore }) => {
       <h2>Add new todo</h2>
       <form onSubmit={(event) => handleSubmit(event)}>
         <TextField
+          inputProps={{ maxLength: 20 }}
           className="title"
           label="Title"
           variant="outlined"

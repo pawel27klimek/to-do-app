@@ -12,18 +12,8 @@ const Details = observer(({ store }: { store: ObservableTodoStore }) => {
   const [detailsTodo, setDetailsTodo] = useState<todo>();
 
   useEffect(() => {
-    store.setSelectedTodoId(id!);
-    store.setSelectedTodo();
-    if (store.selectedTodo !== undefined) {
-      const selected = store.selectedTodo;
-      setDetailsTodo(selected);
-      ///// taki syntax i obserwowane ???? moe samo id????
-    }
-    setTimeout(() => {
-      if (store.todos.length === 0) {
-        navigate('/');
-      }
-    }, 1000);
+    store.getTodo(id!);
+    setDetailsTodo(store.selectedTodo);
   }, [id, store.todos.length]);
 
   return (
