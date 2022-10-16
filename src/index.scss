@@ -109,7 +109,7 @@ body {
           @media screen and (max-width: 1000px) {
             width: 100%;
             align-items: center;
-            margin-top: 20px;
+            margin-top: 50px;
           }
           display: flex;
           flex-direction: column;
@@ -117,6 +117,10 @@ body {
           width: 45vw;
           .add-button-box {
             min-height: 68.5px;
+            @media screen and (max-width: 1000px) {
+              display: flex;
+              justify-content: center;
+            }
             button {
               color: $font-color;
               background-color: $color;

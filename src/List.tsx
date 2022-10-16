@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
 import logo from './logo.png';
 import { motion } from 'framer-motion';
-import { PacmanLoader } from 'react-spinners';
+import { GridLoader } from 'react-spinners';
 
 const List = observer(({ store }: { store: ObservableTodoStore }) => {
   const navigate = useNavigate();
@@ -35,23 +35,20 @@ const List = observer(({ store }: { store: ObservableTodoStore }) => {
       <div className="content">
         <div className="left-container">
           <Outlet />
-          {/* ????? if Outlet === undefined wyświetl coś innego??? zamist tego jest navigate na useEffect */}
         </div>
         <div className="right-container">
           {store.isLoading ? (
             <div className="loading">
-              <PacmanLoader
+              <GridLoader
                 color={'#019edc'}
                 loading={store.isLoading}
-                // cssOverride={override}
-                size={100}
+                size={80}
                 aria-label="Loading Spinner"
                 data-testid="loader"
               />
             </div>
           ) : (
             <div>
-              {/* <div className="add-button-box"> */}
               <motion.div
                 className="add-button-box"
                 whileHover={{ scale: 1.1 }}
@@ -68,7 +65,6 @@ const List = observer(({ store }: { store: ObservableTodoStore }) => {
                   </Button>
                 )}
               </motion.div>
-              {/* </div> */}
               <div className=" cards-container ">
                 {store.todos.map((todo) => (
                   <Todo todo={todo} store={store} key={todo.id} />

@@ -83,7 +83,6 @@ export class ObservableTodoStore {
         createdAt: createdAt,
         deadline: deadline,
       };
-      console.log(newTodo);
       setTimeout(() => {
         runInAction(() => {
           this.todos.unshift(newTodo);
